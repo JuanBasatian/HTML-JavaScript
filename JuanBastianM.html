@@ -29,6 +29,8 @@
         let dataNama = "";
         let dataJumlah = "";
         let dataPilihan = []; // Array untuk menyimpan pilihan-pilihan
+        let pilihanTerpilih = ""; // Untuk menyimpan pilihan yang dipilih dari drop down
+        let dataEmail = ""; // Untuk menyimpan email
 
         function showInputForm() {
             // Sembunyikan output jika sedang tampil
@@ -124,10 +126,123 @@
                 dataPilihan.push(nilaiPilihan);
             }
             
-            // Sembunyikan form input
+            // Setelah semua pilihan tersimpan, tampilkan drop down
+            tampilkanDropDown();
+        }
+        
+        function tampilkanDropDown() {
+            let dropDownHTML = `<h3>Memilih Pilihan Anda:</h3>`;
+            
+            // Tampilan dalam bentuk radio button
+            dropDownHTML += `<div style="margin-bottom: 15px;">`;
+            for (let i = 0; i < dataPilihan.length; i++) {
+                dropDownHTML += `
+                    <div>
+                        <input type="radio" name="pilihanRadio" id="radio${i}" value="${dataPilihan[i]}" onchange="pilihOpsi(this.value)">
+                        <label for="radio${i}">${dataPilihan[i]}</label>
+                    </div>
+                `;
+            }
+            dropDownHTML += `</div>`;
+            
+            // Tombol OK
+            dropDownHTML += `<div style="margin-top: 20px;">`;
+            dropDownHTML += `<button onclick="prosesPilihanTerpilih()">OK</button>`;
+            dropDownHTML += `</div>`;
+            
+            // Tampilkan juga informasi pilihan yang dipilih
+            dropDownHTML += `<div id="infoPilihan" style="margin-top: 15px; color: blue;"></div>`;
+            
+            document.getElementById("inputContainer").innerHTML = dropDownHTML;
+        }
+        
+        function pilihOpsi(nilai) {
+            pilihanTerpilih = nilai;
+            document.getElementById("infoPilihan").innerHTML = `Pilihan Anda: ${nilai}`;
+        }
+        
+        function prosesPilihanTerpilih() {
+            if (!pilihanTerpilih) {
+                alert("Silakan pilih salah satu pilihan terlebih dahulu!");
+                return;
+            }
+            
+            // Jika pilihan sudah dipilih, tampilkan form email
+            tampilkanFormEmail();
+        }
+        
+        function tampilkanFormEmail() {
+            let emailHTML = `<h3>Email:</h3>`;
+            emailHTML += `<table>`;
+            emailHTML += `
+                <tr>
+                    <td>Email :</td>
+                    <td><input type="email" id="inputEmail" placeholder="email@domain.com" value="${dataEmail}" style="width: 250px;"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><small style="color: gray;">Contoh: nama@domain.com</small></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button onclick="validasiEmail()">OK</button></td>
+                </tr>
+            </table>`;
+            
+            document.getElementById("inputContainer").innerHTML = emailHTML;
+        }
+        
+        function validasiEmail() {
+            dataEmail = document.getElementById("inputEmail").value;
+            
+            // Validasi email tidak boleh kosong
+            if (dataEmail.trim() === "") {
+                alert("Email tidak boleh kosong!");
+                return;
+            }
+            
+            // Validasi format email menggunakan regex (pattern matching)
+            // Format: namauser@domain.com atau namauser@domain.co.id dll
+            let patternEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            
+            if (!patternEmail.test(dataEmail)) {
+                alert("Format email tidak valid! Harus mengandung '@' dan domain yang benar.\nContoh: nama@domain.com");
+                return;
+            }
+            
+            // Validasi tambahan - harus ada titik setelah @
+            if (dataEmail.indexOf('.') === -1 || dataEmail.indexOf('@') === -1) {
+                alert("Email harus mengandung '@' dan '.' setelah domain!");
+                return;
+            }
+            
+            // Validasi - tidak boleh ada spasi
+            if (dataEmail.indexOf(' ') !== -1) {
+                alert("Email tidak boleh mengandung spasi!");
+                return;
+            }
+            
+            // Jika semua validasi lolos, tampilkan output sesuai gambar
+            tampilkanOutput();
+        }
+        
+        function tampilkanOutput() {
+            // Buat string untuk daftar pilihan (Pilihan 1, Pilihan 2, dst)
+            let daftarPilihan = "";
+            for (let i = 0; i < dataPilihan.length; i++) {
+                daftarPilihan += dataPilihan[i];
+                if (i < dataPilihan.length - 1) {
+                    daftarPilihan += ", ";
+                }
+            }
+            
+            // Format output persis seperti gambar - TANPA TOMBOL INPUT DATA BARU
+            let outputText = `Hallo, nama saya ${dataNama}, email ${dataEmail} saya mempunyai sejumlah ${dataJumlah} pilihan yaitu ${daftarPilihan}, dan saya memilih ${pilihanTerpilih}`;
+            
+            // Tampilkan output dengan format yang sama persis seperti gambar
+            document.getElementById("outputContainer").innerHTML = outputText;
+            document.getElementById("outputContainer").style.display = "block";
             document.getElementById("inputContainer").style.display = "none";
-            
-            
         }
         
     </script>
