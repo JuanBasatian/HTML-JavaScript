@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Program Belajar JavaScript Dasar</title>
+    <style>
+       
+    </style>
+</head>
+
+<body>
+
+    <h1>Program Pembelajaran JavaScript Dasar</h1>
+    <div class="subtitle">Klik tombol di bawah untuk menjalankan program.</div>
+
+    <div class="button-group">
+        <button onclick="showInputForm()">Masukkan data</button>
+        
+    </div>
+
+    <!-- Container untuk input form -->
+    <div id="inputContainer" class="input-container" style="display: none;"></div>
+    
+    <!-- Container untuk output -->
+    <div id="outputContainer" class="output-container" style="display: none;"></div>
+
+    <script>
+        // Variabel untuk menyimpan data
+        let dataNama = "";
+        let dataJumlah = "";
+
+        function showInputForm() {
+            // Sembunyikan output jika sedang tampil
+            document.getElementById("outputContainer").style.display = "none";
+            
+            // Tampilkan form input
+            let formHTML = `
+                <table>
+                    <tr>
+                        <td>Nama :</td>
+                        <td><input type="text" id="inputNama" placeholder="Masukkan nama" value="${dataNama}"></td>
+                    </tr>
+                    <tr>
+                        <td>Jumlah Pilihan :</td>
+                        <td><input type="number" id="inputJumlah" placeholder="Masukkan jumlah" value="${dataJumlah}" min="0"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><button onclick="simpanData()">OK</button></td>
+                    </tr>
+                </table>
+            `;
+            
+            document.getElementById("inputContainer").innerHTML = formHTML;
+            document.getElementById("inputContainer").style.display = "block";
+        }
+
+        function simpanData() {
+            // Ambil nilai dari input field
+            dataNama = document.getElementById("inputNama").value;
+            dataJumlah = document.getElementById("inputJumlah").value;
+            
+            // Validasi - kedua field tidak boleh kosong
+            if (dataNama.trim() === "" || dataJumlah.trim() === "") {
+                alert("Harap isi kedua field!");
+                return;
+            }
+            
+            // Validasi - nama tidak boleh hanya angka
+            if (/^\d+$/.test(dataNama.trim())) {
+                alert("Nama tidak boleh hanya berisi angka!");
+                return;
+            }
+            
+            // Validasi - jumlah pilihan tidak boleh negatif
+            if (parseInt(dataJumlah) < 0) {
+                alert("Jumlah pilihan tidak boleh negatif!");
+                return;
+            }
+            
+            // Sembunyikan form input
+            document.getElementById("inputContainer").style.display = "none";
+        }
+        
+    </script>
+</body>
+
+</html>
