@@ -15,8 +15,7 @@
     <div class="subtitle">Klik tombol di bawah untuk menjalankan program.</div>
 
     <div class="button-group">
-        <button onclick="showInputForm()">Masukkan data</button>
-        
+        <button onclick="showInputForm()">KLIK DISINI</button>
     </div>
 
     <!-- Container untuk input form -->
@@ -29,6 +28,7 @@
         // Variabel untuk menyimpan data
         let dataNama = "";
         let dataJumlah = "";
+        let dataPilihan = []; // Array untuk menyimpan pilihan-pilihan
 
         function showInputForm() {
             // Sembunyikan output jika sedang tampil
@@ -43,11 +43,11 @@
                     </tr>
                     <tr>
                         <td>Jumlah Pilihan :</td>
-                        <td><input type="number" id="inputJumlah" placeholder="Masukkan jumlah" value="${dataJumlah}" min="0"></td>
+                        <td><input type="number" id="inputJumlah" placeholder="Masukkan jumlah" value="${dataJumlah}" min="1"></td>
                     </tr>
                     <tr>
                         <td></td>
-                        <td><button onclick="simpanData()">OK</button></td>
+                        <td><button onclick="prosesJumlah()">OK</button></td>
                     </tr>
                 </table>
             `;
@@ -56,7 +56,7 @@
             document.getElementById("inputContainer").style.display = "block";
         }
 
-        function simpanData() {
+        function prosesJumlah() {
             // Ambil nilai dari input field
             dataNama = document.getElementById("inputNama").value;
             dataJumlah = document.getElementById("inputJumlah").value;
@@ -74,13 +74,60 @@
             }
             
             // Validasi - jumlah pilihan tidak boleh negatif
-            if (parseInt(dataJumlah) < 0) {
-                alert("Jumlah pilihan tidak boleh negatif!");
+            if (parseInt(dataJumlah) < 1) {
+                alert("Jumlah pilihan minimal 1!");
                 return;
+            }
+            
+            // Tampilkan form input pilihan sesuai jumlah
+            tampilkanFormPilihan();
+        }
+
+        function tampilkanFormPilihan() {
+            let formPilihan = `<h3>Masukkan Pilihan:</h3>`;
+            formPilihan += `<table>`;
+            
+            // Buat input untuk setiap pilihan sesuai jumlah
+            for (let i = 1; i <= parseInt(dataJumlah); i++) {
+                formPilihan += `
+                    <tr>
+                        <td>Pilihan ${i} :</td>
+                        <td><input type="text" id="pilihan${i}" placeholder="Masukkan teks pilihan ${i}" value="${dataPilihan[i-1] || ''}"></td>
+                    </tr>
+                `;
+            }
+            
+            formPilihan += `
+                <tr>
+                    <td></td>
+                    <td><button onclick="simpanSemuaData()">OK</button></td>
+                </tr>
+            </table>`;
+            
+            document.getElementById("inputContainer").innerHTML = formPilihan;
+        }
+
+        function simpanSemuaData() {
+            // Kosongkan array pilihan
+            dataPilihan = [];
+            
+            // Ambil semua nilai pilihan
+            for (let i = 1; i <= parseInt(dataJumlah); i++) {
+                let nilaiPilihan = document.getElementById(`pilihan${i}`).value;
+                
+                // Validasi - pilihan tidak boleh kosong
+                if (nilaiPilihan.trim() === "") {
+                    alert(`Pilihan ${i} tidak boleh kosong!`);
+                    return;
+                }
+                
+                dataPilihan.push(nilaiPilihan);
             }
             
             // Sembunyikan form input
             document.getElementById("inputContainer").style.display = "none";
+            
+            
         }
         
     </script>
